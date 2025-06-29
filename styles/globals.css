@@ -92,3 +92,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes bounceIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  80% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.animate-bounceIn { animation: bounceIn 0.7s cubic-bezier(.68,-0.55,.27,1.55) both; }

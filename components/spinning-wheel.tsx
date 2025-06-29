@@ -9,6 +9,7 @@ interface SpinningWheelProps {
   onSpin: () => void
   backgroundImage?: string | null
   winner: string | null
+  winnerIndex: number | null
   onWinnerClose: () => void
 }
 
@@ -19,6 +20,7 @@ export function SpinningWheel({
   onSpin,
   backgroundImage,
   winner,
+  winnerIndex,
   onWinnerClose,
 }: SpinningWheelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -46,39 +48,36 @@ export function SpinningWheel({
   }, [entries])
 
   useEffect(() => {
-    if (isSpinning) {
+    if (isSpinning && typeof winnerIndex === 'number' && entries.length > 0) {
       setIsFullscreen(true)
-      // Animate rotation with dramatic deceleration
       const startRotation = rotation
-      const spinAmount = 1800 + Math.random() * 1800 // 5-10 full rotations
-      const finalRotation = startRotation + spinAmount
-
+      // Calculate the angle for the winner segment
+      const anglePerSegment = 360 / entries.length
+      // The pointer is at 0deg (right side), so we want the winner segment's center to land there
+      const targetAngle = 360 - (winnerIndex * anglePerSegment + anglePerSegment / 2)
+      // Add extra full spins for drama
+      const extraSpins = 5 + Math.floor(Math.random() * 5) // 5-9 extra spins
+      const finalRotation = startRotation + extraSpins * 360 + targetAngle
       const startTime = Date.now()
       const duration = 4000 + Math.random() * 2000 // 4-6 seconds
-
       const animate = () => {
         const elapsed = Date.now() - startTime
         const progress = Math.min(elapsed / duration, 1)
-
-        // Dramatic easing function - starts very fast, ends very slow
-        const easeOut = 1 - Math.pow(1 - progress, 4) // More dramatic curve
-        const currentRotation = startRotation + spinAmount * easeOut
-
+        const easeOut = 1 - Math.pow(1 - progress, 4)
+        const currentRotation = startRotation + (finalRotation - startRotation) * easeOut
         setRotation(currentRotation)
-
         if (progress < 1) {
           requestAnimationFrame(animate)
         } else {
-          // Show winner overlay after spin completes
           setTimeout(() => {
             setShowWinnerOverlay(true)
           }, 500)
         }
       }
-
       requestAnimationFrame(animate)
     }
-  }, [isSpinning])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSpinning, winnerIndex, entries.length])
 
   // Handle winner close - zoom out and return to normal view
   const handleWinnerClose = () => {
