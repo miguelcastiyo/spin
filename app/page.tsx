@@ -104,6 +104,8 @@ export default function SpinningWheelApp() {
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+    // Force a redraw by updating entries (no-op)
+    setEntries(e => [...e])
   }
 
   const handleImageButtonClick = () => {

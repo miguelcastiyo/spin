@@ -98,7 +98,7 @@ export function SpinningWheel({
     if (!ctx) return
 
     // Use different sizes based on fullscreen state - bigger home size
-    const size = isFullscreen ? Math.min(window.innerWidth, window.innerHeight) * 0.85 : 340
+    const size = isFullscreen ? Math.min(window.innerWidth, window.innerHeight) * 0.95 : 340
     canvas.width = size
     canvas.height = size
 
