@@ -98,11 +98,8 @@ export function SpinningWheel({
     if (!ctx) return
 
     let size = 340
-    if (isFullscreen && overlayRef.current) {
-      const rect = overlayRef.current.getBoundingClientRect()
-      size = Math.min(rect.width, rect.height)
-    } else if (isFullscreen) {
-      // fallback
+    if (isFullscreen) {
+      // Use the minimum of viewport width and height for a perfect square
       size = Math.min(window.innerWidth, window.innerHeight)
     }
     canvas.width = size
@@ -210,78 +207,41 @@ export function SpinningWheel({
       {/* Fullscreen spinning overlay */}
       {isFullscreen && (
         <div
-          ref={overlayRef}
           className="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300"
-          style={{ width: '100vw', height: '100dvh', maxWidth: '100vw', maxHeight: '100dvh' }}
         >
-          <div className="relative w-full h-full flex items-center justify-center">
-            <canvas
-              key={`wheel-fullscreen-${entries.length}-${entries.join('-')}-${backgroundImage ? 'img' : 'color'}`}
-              ref={canvasRef}
-              className="max-w-full max-h-full drop-shadow-2xl transition-all duration-500 ease-out"
+          <div
+            className="flex items-center justify-center"
+            style={{
+              width: '100vw',
+              height: '100vh',
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+            }}
+          >
+            <div
               style={{
-                width: '100vw',
-                height: '100dvh',
-                maxWidth: '100vw',
-                maxHeight: '100dvh',
-                WebkitTapHighlightColor: "transparent",
-                WebkitTouchCallout: "none",
-                WebkitUserSelect: "none",
-                userSelect: "none",
-                display: 'block',
+                width: `min(100vw, 100vh)`,
+                height: `min(100vw, 100vh)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
-            />
-
-            {/* Winner Modal Overlay on Fullscreen Wheel */}
-            {showWinnerOverlay && winner && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-black/20 backdrop-blur-sm absolute inset-0 rounded-full"></div>
-                <div className="relative z-10 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl text-center max-w-xs w-full mx-4 transform transition-all duration-500 scale-100">
-                  {/* Fireworks Animation */}
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
-                    {[...Array(16)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute animate-ping"
-                        style={{
-                          left: `${10 + i * 5}%`,
-                          top: `${10 + (i % 5) * 18}%`,
-                          animationDelay: `${i * 0.1}s`,
-                          animationDuration: "1.5s",
-                        }}
-                      >
-                        <div className="w-4 h-4 bg-yellow-400 rounded-full opacity-60"></div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="relative z-10 space-y-6">
-                    <div className="space-y-4">
-                      <div className="w-16 h-16 bg-yellow-500 rounded-full mx-auto flex items-center justify-center">
-                        <span className="text-2xl">🏆</span>
-                      </div>
-                      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
-                        🎉 Winner! 🎉
-                      </h2>
-                    </div>
-
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl p-6 border border-blue-100/50 dark:border-blue-800/50">
-                      <p className="text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">{winner}</p>
-                    </div>
-
-                    <button
-                      onClick={handleWinnerClose}
-                      className="w-full h-12 text-base font-medium bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 transition-all duration-200 rounded-2xl shadow-sm active:scale-95 text-white touch-manipulation"
-                      style={{
-                        WebkitTapHighlightColor: "transparent",
-                      }}
-                    >
-                      Spin Again
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            >
+              <canvas
+                key={`wheel-fullscreen-${entries.length}-${entries.join('-')}-${backgroundImage ? 'img' : 'color'}`}
+                ref={canvasRef}
+                className="drop-shadow-2xl transition-all duration-500 ease-out"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'block',
+                  WebkitTapHighlightColor: "transparent",
+                  WebkitTouchCallout: "none",
+                  WebkitUserSelect: "none",
+                  userSelect: "none",
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
