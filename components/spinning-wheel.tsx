@@ -26,6 +26,7 @@ export function SpinningWheel({
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showWinnerOverlay, setShowWinnerOverlay] = useState(false)
   const [backgroundImg, setBackgroundImg] = useState<HTMLImageElement | null>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   // Preload background image
   useEffect(() => {
@@ -96,7 +97,14 @@ export function SpinningWheel({
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    const size = isFullscreen ? Math.min(window.innerWidth, window.innerHeight) * 0.95 : 340
+    let size = 340
+    if (isFullscreen && overlayRef.current) {
+      const rect = overlayRef.current.getBoundingClientRect()
+      size = Math.min(rect.width, rect.height)
+    } else if (isFullscreen) {
+      // fallback
+      size = Math.min(window.innerWidth, window.innerHeight)
+    }
     canvas.width = size
     canvas.height = size
 
@@ -201,17 +209,26 @@ export function SpinningWheel({
 
       {/* Fullscreen spinning overlay */}
       {isFullscreen && (
-        <div className="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300">
-          <div className="relative">
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300"
+          style={{ width: '100vw', height: '100dvh', maxWidth: '100vw', maxHeight: '100dvh' }}
+        >
+          <div className="relative w-full h-full flex items-center justify-center">
             <canvas
               key={`wheel-fullscreen-${entries.length}-${entries.join('-')}-${backgroundImage ? 'img' : 'color'}`}
               ref={canvasRef}
               className="max-w-full max-h-full drop-shadow-2xl transition-all duration-500 ease-out"
               style={{
+                width: '100vw',
+                height: '100dvh',
+                maxWidth: '100vw',
+                maxHeight: '100dvh',
                 WebkitTapHighlightColor: "transparent",
                 WebkitTouchCallout: "none",
                 WebkitUserSelect: "none",
                 userSelect: "none",
+                display: 'block',
               }}
             />
 

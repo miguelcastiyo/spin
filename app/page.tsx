@@ -222,7 +222,7 @@ export default function SpinningWheelApp() {
 
           {/* Entries List */}
           <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-gray-200/50 dark:border-gray-700/50 rounded-3xl overflow-hidden shadow-sm transition-colors duration-300">
-            <div className="p-4 space-y-3 max-h-64 overflow-y-auto -webkit-overflow-scrolling-touch">
+            <div className="p-4 space-y-3">
               {entries.map((entry, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div
