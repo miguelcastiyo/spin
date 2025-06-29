@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   description: 'Created with v0',
   generator: 'v0.dev',
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/racoon.png',
+    shortcut: '/racoon.png',
+    apple: '/racoon.png',
   },
 }
 
