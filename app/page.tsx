@@ -151,8 +151,19 @@ export default function SpinningWheelApp() {
 
   // Smart color assignment to prevent adjacent similar colors
   const getSegmentColor = (index: number) => {
-    // For better color distribution, we use a pattern that ensures
-    // no two adjacent segments have similar colors
+    // Custom color mapping for default entries to swap Kayla and Angelo's colors
+    if (entries.length === 5 && entries[0] === "Hannah" && entries[1] === "Grace" && entries[2] === "Angelo" && entries[3] === "Kayla" && entries[4] === "Miguel") {
+      const customColors = [
+        WHEEL_COLORS[0],  // Hannah - Blue
+        WHEEL_COLORS[1],  // Grace - Red  
+        WHEEL_COLORS[4],  // Angelo - Purple (swapped with Kayla)
+        WHEEL_COLORS[2],  // Kayla - Green (swapped with Angelo)
+        WHEEL_COLORS[5],  // Miguel - Yellow
+      ]
+      return customColors[index]
+    }
+    
+    // Default color assignment for other cases
     const colorIndex = (index * 3) % WHEEL_COLORS.length
     return WHEEL_COLORS[colorIndex]
   }
