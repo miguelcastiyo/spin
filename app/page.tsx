@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card"
 import { Shuffle, Trash2, Plus, Upload, X } from "lucide-react"
 import { SpinningWheel } from "../components/spinning-wheel"
 import { ThemeToggle } from "../components/theme-toggle"
+import FeedbackModal from '../components/feedback-modal'
 
 const DEFAULT_ENTRIES = ["Yes", "No", "Yes", "No", "Yes", "No", "Yes", "No"]
 // Expanded color palette to prevent clashing - ensures no adjacent colors are similar
@@ -125,6 +126,7 @@ export default function SpinningWheelApp() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300 overflow-x-hidden">
       <ThemeToggle />
+      <FeedbackModal />
 
       <div className="max-w-sm mx-auto px-4 py-6 space-y-6">
         {/* Header */}
