@@ -52,21 +52,21 @@ export function SpinningWheel({
   useEffect(() => {
     if (isSpinning && typeof winnerIndex === 'number' && entries.length > 0) {
       setIsFullscreen(true)
-      const startRotation = rotation
       // Calculate the angle for the winner segment
       const anglePerSegment = 360 / entries.length
       // The pointer is at 0deg (right side), so we want the winner segment's center to land there
       const targetAngle = 360 - (winnerIndex * anglePerSegment + anglePerSegment / 2)
       // Add extra full spins for drama
       const extraSpins = 5 + Math.floor(Math.random() * 5) // 5-9 extra spins
-      const finalRotation = startRotation + extraSpins * 360 + targetAngle
+      // Calculate final rotation from current position
+      const finalRotation = rotation + extraSpins * 360 + targetAngle
       const startTime = Date.now()
       const duration = 4000 + Math.random() * 2000 // 4-6 seconds
       const animate = () => {
         const elapsed = Date.now() - startTime
         const progress = Math.min(elapsed / duration, 1)
         const easeOut = 1 - Math.pow(1 - progress, 4)
-        const currentRotation = startRotation + (finalRotation - startRotation) * easeOut
+        const currentRotation = rotation + (finalRotation - rotation) * easeOut
         setRotation(currentRotation)
         if (progress < 1) {
           requestAnimationFrame(animate)
@@ -87,6 +87,7 @@ export function SpinningWheel({
     setShowWinnerOverlay(false)
     setTimeout(() => {
       setIsFullscreen(false)
+      setRotation(0) // Reset rotation for next spin
       onWinnerClose()
     }, 300)
   }
