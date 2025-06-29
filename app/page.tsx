@@ -11,7 +11,7 @@ import { SpinningWheel } from "../components/spinning-wheel"
 import { ThemeToggle } from "../components/theme-toggle"
 import FeedbackModal from '../components/feedback-modal'
 
-const DEFAULT_ENTRIES = ["Yes", "No", "Yes", "No", "Yes", "No", "Yes", "No"]
+const DEFAULT_ENTRIES = ["Hannah", "Grace", "Angelo", "Kayla", "Miguel"]
 // Expanded color palette to prevent clashing - ensures no adjacent colors are similar
 const WHEEL_COLORS = [
   "#007AFF", // Blue
@@ -59,7 +59,7 @@ export default function SpinningWheelApp() {
       return
     }
     
-    setEntries([...entries, trimmedEntry])
+    setEntries([trimmedEntry, ...entries])
     setNewEntry("")
     setError(null)
   }
