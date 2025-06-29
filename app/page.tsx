@@ -108,6 +108,10 @@ export default function SpinningWheelApp() {
     setWinnerIndex(null)
   }
 
+  const handleSpinComplete = () => {
+    setIsSpinning(false)
+  }
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -188,6 +192,7 @@ export default function SpinningWheelApp() {
             colors={entries.map((_, i) => getSegmentColor(i))}
             isSpinning={isSpinning}
             onSpin={handleSpin}
+            onSpinComplete={handleSpinComplete}
             backgroundImage={backgroundImage}
             winner={winner}
             winnerIndex={winnerIndex}

@@ -7,6 +7,7 @@ interface SpinningWheelProps {
   colors: string[]
   isSpinning: boolean
   onSpin: () => void
+  onSpinComplete: () => void
   backgroundImage?: string | null
   winner: string | null
   winnerIndex: number | null
@@ -18,6 +19,7 @@ export function SpinningWheel({
   colors,
   isSpinning,
   onSpin,
+  onSpinComplete,
   backgroundImage,
   winner,
   winnerIndex,
@@ -71,6 +73,7 @@ export function SpinningWheel({
         } else {
           setTimeout(() => {
             setShowWinnerOverlay(true)
+            onSpinComplete()
           }, 500)
         }
       }
