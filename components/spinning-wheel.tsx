@@ -182,7 +182,7 @@ export function SpinningWheel({
     <>
       <div className="relative">
         <canvas
-          key={`wheel-${entries.length}-${entries.join('-')}`}
+          key={`wheel-${entries.length}-${entries.join('-')}-${backgroundImage ? 'img' : 'color'}`}
           ref={canvasRef}
           onClick={handleClick}
           className={`cursor-pointer transition-all duration-300 ease-out rounded-full shadow-lg touch-manipulation ${
@@ -204,7 +204,7 @@ export function SpinningWheel({
         <div className="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300">
           <div className="relative">
             <canvas
-              key={`wheel-fullscreen-${entries.length}-${entries.join('-')}`}
+              key={`wheel-fullscreen-${entries.length}-${entries.join('-')}-${backgroundImage ? 'img' : 'color'}`}
               ref={canvasRef}
               className="max-w-full max-h-full drop-shadow-2xl transition-all duration-500 ease-out"
               style={{
