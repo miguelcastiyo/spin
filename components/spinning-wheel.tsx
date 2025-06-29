@@ -30,10 +30,8 @@ export function SpinningWheel({
   // Preload background image
   useEffect(() => {
     if (backgroundImage) {
-      const img = new Image()
-      img.onload = () => {
-        setBackgroundImg(img)
-      }
+      const img = new window.Image()
+      img.onload = () => setBackgroundImg(img)
       img.crossOrigin = "anonymous"
       img.src = backgroundImage
     } else {
@@ -90,6 +88,7 @@ export function SpinningWheel({
     }, 300)
   }
 
+  // Redraw canvas when relevant state changes
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -97,7 +96,6 @@ export function SpinningWheel({
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Use different sizes based on fullscreen state - bigger home size
     const size = isFullscreen ? Math.min(window.innerWidth, window.innerHeight) * 0.95 : 340
     canvas.width = size
     canvas.height = size
@@ -106,23 +104,17 @@ export function SpinningWheel({
     const centerY = size / 2
     const radius = size / 2 - 8
 
-    // Clear canvas
     ctx.clearRect(0, 0, size, size)
 
     drawWheel()
 
     function drawWheel() {
       if (!ctx) return
-
       const anglePerSegment = (2 * Math.PI) / entries.length
-
-      // Save the context for the entire wheel rotation
       ctx.save()
       ctx.translate(centerX, centerY)
       ctx.rotate((rotation * Math.PI) / 180)
       ctx.translate(-centerX, -centerY)
-
-      // Draw background image if provided (rotates with the wheel)
       if (backgroundImg) {
         ctx.save()
         ctx.beginPath()
@@ -131,29 +123,20 @@ export function SpinningWheel({
         ctx.drawImage(backgroundImg, centerX - radius, centerY - radius, radius * 2, radius * 2)
         ctx.restore()
       }
-
-      // Draw segments
       entries.forEach((entry, index) => {
         const startAngle = index * anglePerSegment
         const endAngle = (index + 1) * anglePerSegment
-
-        // Draw segment
         ctx.beginPath()
         ctx.moveTo(centerX, centerY)
         ctx.arc(centerX, centerY, radius, startAngle, endAngle)
         ctx.closePath()
-
-        // Only fill with color if no background image
         if (!backgroundImg) {
           ctx.fillStyle = colors[index]
           ctx.fill()
         }
-
         ctx.strokeStyle = "#ffffff"
         ctx.lineWidth = 2
         ctx.stroke()
-
-        // Draw text
         ctx.save()
         ctx.translate(centerX, centerY)
         ctx.rotate(startAngle + anglePerSegment / 2)
@@ -168,12 +151,7 @@ export function SpinningWheel({
         ctx.fillText(entry, radius * 0.72, 0)
         ctx.restore()
       })
-
-      // Restore the context after wheel rotation
       ctx.restore()
-
-      // Draw center circle and pointer (these don't rotate)
-      // Draw very small center circle
       ctx.beginPath()
       ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI)
       ctx.fillStyle = "#ffffff"
@@ -181,8 +159,6 @@ export function SpinningWheel({
       ctx.strokeStyle = "#007AFF"
       ctx.lineWidth = 1.5
       ctx.stroke()
-
-      // Draw pointer (stationary)
       ctx.beginPath()
       ctx.moveTo(centerX + radius - 4, centerY)
       ctx.lineTo(centerX + radius - 20, centerY - 12)
