@@ -6,7 +6,13 @@ import { useState, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { Shuffle, Trash2, Plus, Upload, X, Copy } from "lucide-react"
+import { Shuffle, Trash2, Plus, Upload, X, Copy, SlidersHorizontal } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu"
 import { SpinningWheel } from "../components/spinning-wheel"
 import { ThemeToggle } from "../components/theme-toggle"
 import FeedbackModal from '../components/feedback-modal'
@@ -162,6 +168,11 @@ export default function SpinningWheelApp() {
     }
   }
 
+  const setYesNoPreset = () => {
+    setEntries(["Yes", "No", "Yes", "No", "Yes", "No"])
+    setError(null)
+  }
+
   // Smart color assignment to prevent adjacent similar colors
   const getSegmentColor = (index: number) => {
     // For better color distribution, we use a pattern that ensures
@@ -208,7 +219,7 @@ export default function SpinningWheelApp() {
         {/* Controls */}
         <div className="space-y-5">
           {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
             <Button
               onClick={shuffleEntries}
               variant="outline"
@@ -216,8 +227,7 @@ export default function SpinningWheelApp() {
               className="h-12 bg-white/80 dark:bg-gray-800/80 border-gray-200/80 dark:border-gray-700/80 hover:bg-white dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 rounded-2xl font-medium text-gray-700 dark:text-gray-200 active:scale-95 touch-manipulation"
               aria-label="Shuffle entries"
             >
-              <Shuffle className="w-4 h-4 mr-2" />
-              Shuffle
+              <Shuffle className="w-4 h-4" />
             </Button>
             <Button
               onClick={handleImageButtonClick}
@@ -231,12 +241,29 @@ export default function SpinningWheelApp() {
               aria-label={backgroundImage ? "Remove background image" : "Upload background image"}
             >
               {backgroundImage ? (
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="w-4 h-4" />
               ) : (
-              <Upload className="w-4 h-4 mr-2" />
+                <Upload className="w-4 h-4" />
               )}
-              Image
             </Button>
+            {/* Presets Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-12 w-full bg-white/80 dark:bg-gray-800/80 border-gray-200/80 dark:border-gray-700/80 hover:bg-white dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 rounded-2xl font-medium text-gray-700 dark:text-gray-200 active:scale-95 touch-manipulation"
+                  aria-label="Presets"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" sideOffset={8} className="min-w-[140px]">
+                <DropdownMenuItem onClick={setYesNoPreset} className="cursor-pointer">
+                  Yes/No
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               onClick={clearAllEntries}
               variant="outline"
@@ -244,8 +271,7 @@ export default function SpinningWheelApp() {
               className="h-12 bg-white/80 dark:bg-gray-800/80 border-gray-200/80 dark:border-gray-700/80 hover:bg-white dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 rounded-2xl font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 active:scale-95 touch-manipulation"
               aria-label="Clear all entries"
             >
-              <X className="w-4 h-4 mr-2" />
-              Clear
+              <X className="w-4 h-4" />
             </Button>
           </div>
 
