@@ -219,7 +219,7 @@ export default function SpinningWheelApp() {
         {/* Controls */}
         <div className="space-y-5">
           {/* Action Buttons */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-5 gap-2 sm:gap-3">
             <Button
               onClick={shuffleEntries}
               variant="outline"
@@ -264,6 +264,17 @@ export default function SpinningWheelApp() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {/* Duplicate Icon Button */}
+            <Button
+              onClick={duplicateEntries}
+              variant="outline"
+              size="lg"
+              disabled={entries.length === 0 || entries.length >= 20}
+              className="h-12 bg-white/80 dark:bg-gray-800/80 border-gray-200/80 dark:border-gray-700/80 hover:bg-white dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 rounded-2xl font-medium text-gray-700 dark:text-gray-200 active:scale-95 touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
+              aria-label="Duplicate all entries"
+            >
+              <Copy className="w-4 h-4" />
+            </Button>
             <Button
               onClick={clearAllEntries}
               variant="outline"
@@ -359,23 +370,6 @@ export default function SpinningWheelApp() {
                   </Button>
                 </div>
               ))}
-              
-              {/* Duplicate Action - Only show if there are entries */}
-              {entries.length > 0 && (
-                <div className="pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
-                  <Button
-                    onClick={duplicateEntries}
-                    variant="ghost"
-                    size="sm"
-                    disabled={entries.length >= 20}
-                    className="w-full h-9 text-xs bg-white/40 dark:bg-gray-700/40 hover:bg-white/60 dark:hover:bg-gray-600/60 border border-gray-200/40 dark:border-gray-600/40 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 rounded-lg font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 active:scale-95 touch-manipulation disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Duplicate all entries"
-                  >
-                    <Copy className="w-3 h-3 mr-1.5" />
-                    Duplicate
-                  </Button>
-                </div>
-              )}
             </div>
           </Card>
 
