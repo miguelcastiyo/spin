@@ -6,7 +6,7 @@ import { useState, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { Shuffle, Trash2, Plus, Upload, X } from "lucide-react"
+import { Shuffle, Trash2, Plus, Upload, X, Copy } from "lucide-react"
 import { SpinningWheel } from "../components/spinning-wheel"
 import { ThemeToggle } from "../components/theme-toggle"
 import FeedbackModal from '../components/feedback-modal'
@@ -54,11 +54,6 @@ export default function SpinningWheelApp() {
       return
     }
     
-    if (entries.includes(trimmedEntry)) {
-      setError("This entry already exists")
-      return
-    }
-    
     setEntries([trimmedEntry, ...entries])
     setNewEntry("")
     setError(null)
@@ -93,13 +88,27 @@ export default function SpinningWheelApp() {
     setError(null)
   }
 
+  const duplicateEntries = () => {
+    if (entries.length === 0) return
+    
+    const newEntries = [...entries, ...entries]
+    
+    if (newEntries.length > 20) {
+      setError("Maximum 20 entries reached")
+      return
+    }
+    
+    setEntries(newEntries)
+    setError(null)
+  }
+
   const handleSpin = useCallback(() => {
     if (isSpinning || entries.length === 0) return
     setIsSpinning(true)
     setError(null)
     // Pick winner index first
-    const randomIndex = Math.floor(Math.random() * entries.length)
-    setWinner(entries[randomIndex])
+      const randomIndex = Math.floor(Math.random() * entries.length)
+      setWinner(entries[randomIndex])
     setWinnerIndex(randomIndex)
   }, [entries, isSpinning])
 
@@ -126,15 +135,15 @@ export default function SpinningWheelApp() {
       return
     }
     
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      setBackgroundImage(e.target?.result as string)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setBackgroundImage(e.target?.result as string)
       setError(null)
     }
     reader.onerror = () => {
       setError("Failed to load image. Please try again.")
-    }
-    reader.readAsDataURL(file)
+      }
+      reader.readAsDataURL(file)
   }
 
   const clearBackgroundImage = () => {
@@ -189,6 +198,13 @@ export default function SpinningWheelApp() {
           />
         </div>
 
+        {/* Instructions */}
+        <div className="text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
+            Tap anywhere on the wheel to spin
+          </p>
+        </div>
+
         {/* Controls */}
         <div className="space-y-5">
           {/* Action Buttons */}
@@ -217,7 +233,7 @@ export default function SpinningWheelApp() {
               {backgroundImage ? (
                 <Trash2 className="w-4 h-4 mr-2" />
               ) : (
-                <Upload className="w-4 h-4 mr-2" />
+              <Upload className="w-4 h-4 mr-2" />
               )}
               Image
             </Button>
@@ -317,15 +333,29 @@ export default function SpinningWheelApp() {
                   </Button>
                 </div>
               ))}
+              
+              {/* Duplicate Action - Only show if there are entries */}
+              {entries.length > 0 && (
+                <div className="pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
+                  <Button
+                    onClick={duplicateEntries}
+                    variant="ghost"
+                    size="sm"
+                    disabled={entries.length >= 20}
+                    className="w-full h-9 text-xs bg-white/40 dark:bg-gray-700/40 hover:bg-white/60 dark:hover:bg-gray-600/60 border border-gray-200/40 dark:border-gray-600/40 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 rounded-lg font-medium text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 active:scale-95 touch-manipulation disabled:opacity-30 disabled:cursor-not-allowed"
+                    aria-label="Duplicate all entries"
+                  >
+                    <Copy className="w-3 h-3 mr-1.5" />
+                    Duplicate
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
 
-          {/* Instructions */}
+          {/* Entry Counter */}
           <div className="text-center pb-4">
-            <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
-              Tap anywhere on the wheel to spin
-            </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
               {entries.length} of 20 entries
             </p>
           </div>
