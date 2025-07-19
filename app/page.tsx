@@ -127,6 +127,15 @@ export default function SpinningWheelApp() {
     setWinnerIndex(null)
   }
 
+  const handleRemoveWinner = () => {
+    if (winnerIndex !== null && entries.length > 2) {
+      setEntries(entries.filter((_, i) => i !== winnerIndex))
+      setWinner(null)
+      setWinnerIndex(null)
+      setIsSpinning(false) // Reset spinning state so wheel can be clicked again
+    }
+  }
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -206,6 +215,7 @@ export default function SpinningWheelApp() {
             winner={winner}
             winnerIndex={winnerIndex}
             onWinnerClose={handleWinnerClose}
+            onRemoveWinner={handleRemoveWinner}
           />
         </div>
 

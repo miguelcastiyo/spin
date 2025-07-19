@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { Trash2, RotateCcw } from "lucide-react"
 
 interface SpinningWheelProps {
   entries: string[]
@@ -12,6 +13,7 @@ interface SpinningWheelProps {
   winner: string | null
   winnerIndex: number | null
   onWinnerClose: () => void
+  onRemoveWinner?: () => void
 }
 
 export function SpinningWheel({
@@ -24,6 +26,7 @@ export function SpinningWheel({
   winner,
   winnerIndex,
   onWinnerClose,
+  onRemoveWinner,
 }: SpinningWheelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [rotation, setRotation] = useState(0)
@@ -89,6 +92,16 @@ export function SpinningWheel({
       setIsFullscreen(false)
       setRotation(0) // Reset rotation for next spin
       onWinnerClose()
+    }, 300)
+  }
+
+  // Handle winner removal - similar to close but also calls onRemoveWinner
+  const handleWinnerRemove = () => {
+    setShowWinnerOverlay(false)
+    setTimeout(() => {
+      setIsFullscreen(false)
+      setRotation(0) // Reset rotation for next spin
+      onRemoveWinner?.()
     }, 300)
   }
 
@@ -282,15 +295,30 @@ export function SpinningWheel({
                       <p className="text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">{winner}</p>
                     </div>
 
-                    <button
-                      onClick={handleWinnerClose}
-                      className="w-full h-12 text-base font-medium bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 transition-all duration-200 rounded-2xl shadow-sm active:scale-95 text-white touch-manipulation"
-                      style={{
-                        WebkitTapHighlightColor: "transparent",
-                      }}
-                    >
-                      Spin Again
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleWinnerClose}
+                        className="flex-1 h-12 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 transition-all duration-200 rounded-2xl shadow-sm active:scale-95 text-white touch-manipulation flex items-center justify-center"
+                        style={{
+                          WebkitTapHighlightColor: "transparent",
+                        }}
+                        title="Keep all options and spin again"
+                      >
+                        <RotateCcw className="w-5 h-5" />
+                      </button>
+                      {onRemoveWinner && entries.length > 2 && (
+                        <button
+                          onClick={handleWinnerRemove}
+                          className="flex-1 h-12 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 transition-all duration-200 rounded-2xl shadow-sm active:scale-95 text-white touch-manipulation flex items-center justify-center"
+                          style={{
+                            WebkitTapHighlightColor: "transparent",
+                          }}
+                          title="Remove this winner from the wheel and continue spinning with remaining options"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
